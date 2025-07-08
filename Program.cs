@@ -1,3 +1,4 @@
+using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using OJTMAPI.Models;
 
@@ -10,11 +11,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//³]©w CORS Policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    options.AddPolicy("Allow5173",
+        builder => builder.WithOrigins("http://localhost:5173/").WithMethods("GET").WithHeaders("*"));
+});
+
 string? connectionString = builder.Configuration.GetConnectionString("ClassDBConnection");
 builder.Services.AddDbContext<ClassDbContext>(options => options.UseSqlServer(connectionString));
 
 
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
