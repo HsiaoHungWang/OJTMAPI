@@ -43,7 +43,7 @@ namespace OJTMAPI.Controllers
 
         // GET: api/Members/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Member>> GetMember(int id)
+        public async Task<ActionResult<MemberReadDto>> GetMember(int id)
         {
             var member = await _context.Members.FindAsync(id);
 
@@ -52,7 +52,16 @@ namespace OJTMAPI.Controllers
                 return NotFound();
             }
 
-            return member;
+            var memberDto = new MemberReadDto
+            {
+                MemberId = member.MemberId,
+                Name = member.Name,
+                Email = member.Email,
+                Age = member.Age,
+                FileName = member.FileName
+            };
+
+            return Ok(memberDto);
         }
 
         // PUT: api/Members/5
